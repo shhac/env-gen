@@ -5,3 +5,5 @@ authors = ["Paul Somers <paulsomers@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+yaml-rust = "0.4.3"
+dialoguer = "0.3.0"
