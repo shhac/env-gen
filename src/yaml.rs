@@ -4,6 +4,7 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use yaml_rust::yaml;
+use question;
 
 fn get_file_name() -> String {
   let args: Vec<_> = env::args().collect();
@@ -21,6 +22,39 @@ fn get_file_contents(file_name: &str) -> String {
   f.read_to_string(&mut s).unwrap();
   return s;
 }
+
+fn dump_questions(doc: &yaml::Yaml) -> question::Quesitons {
+  let mut questions: question::Quesitons::new();
+  for (k, v) in doc {
+    let mut answers = question::Answers::new();
+    for (a) in v["answers"] {
+      let default: bool = a.has_entry("default") & a["default"] == "true";
+      let answer: question::Answer = {
+        default: default,
+        text: a["text"],
+        value: a["value"],
+      };
+
+      answers.add(answer);
+    }
+    let question: question::Question = {
+      question: v["question"],
+      name: v["name"],
+      answers: answers,
+    }
+    questions.insert(k, question);
+  }
+  return questions;
+}
+
+pub fn readQ() -> question::Questions {
+  let file_name: &str = &*get_file_name();
+  let file_contents = get_file_contents(file_name);
+  let y: Vec<yaml::Yaml> = yaml::YamlLoader::load_from_str(&file_contents).unwrap();
+  return dump_questions(&y);
+}
+
+// --------------------
 
 pub fn read() -> Vec<yaml::Yaml> {
     let file_name: &str = &*get_file_name();
