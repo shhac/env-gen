@@ -1,3 +1,8 @@
+mod ask;
+mod yaml;
+
 fn main() {
-    println!("Hello, world!");
+    ask::ask("Hello, world!");
+    let docs = yaml::read();
+    yaml::dump_yaml(docs);
 }

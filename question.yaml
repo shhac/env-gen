@@ -1,0 +1,9 @@
+name:
+  question: 'What should I call you?'
+  name: NAME
+  answers:
+    - text: Paul
+      value: Paul of Awesome
+      default: true
+    - text: Bob
+      value: Normal Bob
