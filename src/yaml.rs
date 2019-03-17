@@ -4,7 +4,7 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use yaml_rust::yaml;
-use question;
+use super::question;
 
 fn get_file_name() -> String {
   let args: Vec<_> = env::args().collect();
@@ -29,7 +29,7 @@ fn dump_questions(doc: &yaml::Yaml) -> question::Quesitons {
     let mut answers = question::Answers::new();
     for (a) in v["answers"] {
       let default: bool = a.has_entry("default") & a["default"] == "true";
-      let answer: question::Answer = {
+      let answer: question::Answer = question::Answer {
         default: default,
         text: a["text"],
         value: a["value"],
@@ -37,11 +37,11 @@ fn dump_questions(doc: &yaml::Yaml) -> question::Quesitons {
 
       answers.add(answer);
     }
-    let question: question::Question = {
+    let question: question::Question = question::Question {
       question: v["question"],
       name: v["name"],
       answers: answers,
-    }
+    };
     questions.insert(k, question);
   }
   return questions;
